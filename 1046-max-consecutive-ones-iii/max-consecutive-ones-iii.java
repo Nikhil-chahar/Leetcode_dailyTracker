@@ -8,7 +8,7 @@ class Solution {
                 k--;
             } 
             en++;
-            while(k <0){
+            while(k <0 && st <=en){
                 if(nums[st] ==0){
                     k++;
                 }
