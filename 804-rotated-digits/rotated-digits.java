@@ -1,41 +1,26 @@
 class Solution {
     public int rotatedDigits(int n) {
-        
-        int ans[] = new int[n+1];
+        int cnt = 0;
 
         for(int i=1;i<=n;i++){
             if(isGood(i)){
-                ans[i]+=1;
+               cnt++;
             }
-            ans[i]+=ans[i-1];
-            // System.out.println(ans[i]);
         }
-        return ans[n];
+        return cnt;
     }
     public boolean isGood(int n){
-        String s = String.valueOf(n);
-        HashSet<Character> set = new HashSet<>(Arrays.asList('3','4','7'));
-        StringBuilder sb = new StringBuilder();
-
-        for(char ch : s.toCharArray()){
-            if(set.contains(ch)){
+        boolean dif = false;
+        while(n > 0){
+            int t= n%10;
+            if(t == 3 || t==4 || t==7){
                 return false;
             }
-            else if(ch == '2'){
-                sb.append('5');
+            if(t == 2 || t==5 || t==6 || t == 9){
+                dif = true;
             }
-            else if(ch == '5'){
-                sb.append('2');
-            }else if(ch == '6'){
-                sb.append('9');
-            }else if(ch == '9'){
-                sb.append('6');
-            }else{
-                sb.append(ch);
-            }
+            n/=10;
         }
-        int val = Integer.parseInt(sb.toString());
-        if(val == n) return false;
-        return true;
+        return dif;
     }
 }
