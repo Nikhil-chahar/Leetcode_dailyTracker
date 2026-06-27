@@ -1,6 +1,6 @@
 class Solution {
     public int maximumLength(int[] nums) {
-        TreeMap<Integer,Integer> map = new TreeMap<>();
+        HashMap<Integer,Integer> map = new HashMap<>();
         int cnt=0;
 
         for(int v : nums){
@@ -16,16 +16,17 @@ class Solution {
             ans = cnt-1;
         }
 
+        HashSet<Integer> vis = new HashSet<>();
         for(int key : map.keySet()){
+            if(vis.contains(key)){
+                continue;
+            }
             int v = key;
             int level=0;
 
             for(;;v*=v){
-                int c = 0;
-                if(map.containsKey(v)){
-                    c = map.get(v);
-                }
-
+                vis.add(v);
+                int c = map.getOrDefault(v,0);
                 if(c >= 2){
                     level +=2;
                 }else if(c == 1){
