@@ -1,15 +1,16 @@
 class Solution {
     public int gcdOfOddEvenSums(int n) {
-        int even = n*(n+1);
-        int odd = n*n;
-        return gcd(even,odd);
+        int a = n*(2 + (n-1)*2)/2;
+        int b = n*(4 + (n-1)*2)/2;
+
+        return gcd(a,b);
+        // return b;
+
     }
     public int gcd(int a,int b){
-        while(b != 0){
-            int temp = b;
-            b = a%b;
-            a = temp;
+        if(b == 0){
+            return a;
         }
-        return a;
+        return gcd(b,a%b);
     }
 }
