@@ -1,35 +1,31 @@
 class Solution {
     public List<List<Integer>> shiftGrid(int[][] grid, int k) {
+        List<List<Integer>> ans = new ArrayList<>();
+
         List<Integer> ll = new ArrayList<>();
 
         for(int i=0;i<grid.length;i++){
-            for(int j=0;j<grid[0].length;j++){
+            for(int j =0;j<grid[0].length;j++){
                 ll.add(grid[i][j]);
             }
         }
-        int arr[] = new int[ll.size()];
-        int ind=0;
+        int sz = ll.size();
+        k %= sz;
+        k = (sz-k);
 
-        k = k%(grid.length*grid[0].length);
-        System.out.print(k);
-
-        for(int i=ll.size()-k;i<ll.size();i++){
-            arr[ind++] = ll.get(i);
-        }
-        for(int i=0;i<ll.size()-k;i++){
-            arr[ind++] = ll.get(i);
-        }
-        List<List<Integer>> ans = new ArrayList<>();
-        int c=0,tc=ll.size();
-        ind=0;
-        while(c<tc){
+        for(int i=0;i<grid.length;i++){
             List<Integer> nl = new ArrayList<>();
-            while(nl.size() != grid[0].length){
-                nl.add(arr[ind++]);
-                c++;
+            for(int j =0;j<grid[0].length;j++){
+                grid[i][j] = ll.get(k%sz);
+                nl.add(grid[i][j]);
+                k++;
             }
-            ans.add(nl);
+            ans.add(new ArrayList<>(nl));
         }
+
         return ans;
+
+
+        
     }
 }
