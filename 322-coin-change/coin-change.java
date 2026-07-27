@@ -1,35 +1,32 @@
 class Solution {
-
-    int[] dp;
-
+    int IN = 1000000000;
     public int coinChange(int[] coins, int amount) {
+        int n = coins.length;
 
-        dp = new int[amount + 1];
-        Arrays.fill(dp, -1);
+        int dp[][] = new int[n][amount+1];
 
-        int ans = solve(coins, amount);
-        return ans == Integer.MAX_VALUE ? -1 : ans;
-    }
-
-    private int solve(int[] coins, int rem) {
-
-        // base cases
-        if(rem == 0) return 0;
-        if(rem < 0) return Integer.MAX_VALUE;
-
-        // memoized
-        if(dp[rem] != -1) return dp[rem];
-
-        int min = Integer.MAX_VALUE;
-
-        for(int coin : coins) {
-            int res = solve(coins, rem - coin);
-            if(res != Integer.MAX_VALUE) {
-                min = Math.min(min, res + 1);
-            }
+        for(int a[] : dp){
+            Arrays.fill(a,-1);
         }
 
-        dp[rem] = min;
-        return min;
+        int ans = find(coins,amount,dp,0);
+        return ans==IN ? -1 : ans;
+    }
+
+    public int find(int coins[],int amt,int dp[][],int ind){
+        if(amt == 0){
+            return 0;
+        }
+        if(amt < 0 || ind== coins.length){
+            return IN;
+        }
+        if(dp[ind][amt] != -1){
+            return dp[ind][amt];
+        }
+
+        int inc = 1+ find(coins,amt-coins[ind],dp,ind);
+        int exc = find(coins,amt,dp,ind+1);
+
+        return dp[ind][amt] = Math.min(inc,exc); 
     }
 }
