@@ -1,58 +1,98 @@
+import java.util.HashMap;
+
 class LRUCache {
-    HashMap<Integer, int[]> map;
-    int cap;
-    int pr = 0;
+
+    class Node {
+        int key;
+        int value;
+        Node prev;
+        Node next;
+
+        Node(int key, int value) {
+            this.key = key;
+            this.value = value;
+        }
+    }
+
+    HashMap<Integer, Node> map;
+    Node head;
+    Node tail;
+    int capacity;
 
     public LRUCache(int capacity) {
-        cap = capacity;
+        this.capacity = capacity;
         map = new HashMap<>();
+
+        // Dummy nodes
+        head = new Node(0, 0);
+        tail = new Node(0, 0);
+
+        head.next = tail;
+        tail.prev = head;
     }
 
     public int get(int key) {
+
         if (!map.containsKey(key)) {
             return -1;
         }
 
-        int[] ar = map.get(key);
-        ar[1] = pr++;
-        return ar[0];
+        Node node = map.get(key);
+
+        // This node was recently used,
+        // so move it to the front.
+        remove(node);
+        addFirst(node);
+
+        return node.value;
     }
 
     public void put(int key, int value) {
+
+        // Key already exists
         if (map.containsKey(key)) {
-            int[] ar = map.get(key);
-            ar[0] = value;
-            ar[1] = pr++;
+
+            Node node = map.get(key);
+
+            node.value = value;
+
+            // Mark as recently used
+            remove(node);
+            addFirst(node);
+
             return;
         }
 
-        if (map.size() == cap) {
-            remove();
-        }
+        // Create new node
+        Node node = new Node(key, value);
 
-        map.put(key, new int[]{value, pr++});
+        map.put(key, node);
+        addFirst(node);
+
+        // Capacity exceeded
+        if (map.size() > capacity) {
+
+            Node lru = tail.prev;
+
+            remove(lru);
+            map.remove(lru.key);
+        }
     }
 
-    public void remove() {
-        int min = Integer.MAX_VALUE;
-        int rkey = -1;
+    // Remove a node from linked list
+    private void remove(Node node) {
 
-        for (int key : map.keySet()) {
-            int[] ar = map.get(key);
+        node.prev.next = node.next;
+        node.next.prev = node.prev;
+    }
 
-            if (ar[1] < min) {
-                min = ar[1];
-                rkey = key;
-            }
-        }
+    // Add node at front
+    private void addFirst(Node node) {
 
-        map.remove(rkey);
+        node.next = head.next;
+        node.prev = head;
+
+        head.next.prev = node;
+        head.next = node;
     }
 }
-
-/**
- * Your LRUCache object will be instantiated and called as such:
- * LRUCache obj = new LRUCache(capacity);
- * int param_1 = obj.get(key);
- * obj.put(key,value);
- */
