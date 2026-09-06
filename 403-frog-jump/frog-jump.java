@@ -1,63 +1,43 @@
-import java.util.*;
-
 class Solution {
-
     int n;
-    Map<Integer, Integer> map;
-    Boolean[][] dp;
+    HashMap<Integer,Integer> map;
+    Boolean vis[][];
 
     public boolean canCross(int[] stones) {
-
-        n = stones.length;
-
-        // stone position -> index
         map = new HashMap<>();
-
-        for (int i = 0; i < n; i++) {
-            map.put(stones[i], i);
+        n = stones.length;
+        for(int i=0;i<n;i++){
+            map.put(stones[i],i);
         }
+        
+        vis = new Boolean[n][n+1];
+        
+        return find(0,0,stones);
 
-        // dp[index][lastJump]
-        dp = new Boolean[n][n + 1];
-
-        return solve(0, 0, stones);
     }
 
-    private boolean solve(int index, int lastJump, int[] stones) {
-
-        // Reached the last stone
-        if (index == n - 1) {
+    public boolean find(int k,int ind,int stones[]){
+        if(ind == n-1){
             return true;
         }
-
-        // Already solved this state
-        if (dp[index][lastJump] != null) {
-            return dp[index][lastJump];
+        if(vis[ind][k] != null){
+            return vis[ind][k];
         }
 
-        // Try lastJump - 1, lastJump, lastJump + 1
-        for (int jump = lastJump - 1;
-             jump <= lastJump + 1;
-             jump++) {
-
-            // Jump distance must be positive
-            if (jump <= 0) {
+        for(int i=k-1;i<=k+1;i++){
+            if(i <= 0){
                 continue;
             }
+            int nx = stones[ind]+i;
 
-            int nextPosition = stones[index] + jump;
+            if(map.containsKey(nx)){
+                int nind = map.get(nx);
 
-            // Does this stone exist?
-            if (map.containsKey(nextPosition)) {
-
-                int nextIndex = map.get(nextPosition);
-
-                if (solve(nextIndex, jump, stones)) {
-                    return dp[index][lastJump] = true;
+                if(find(i,nind,stones)){
+                    return vis[ind][k] = true;
                 }
             }
         }
-
-        return dp[index][lastJump] = false;
+        return vis[ind][k] = false;
     }
 }
