@@ -1,29 +1,31 @@
 class Solution {
+    int dp[][];
     public int numDistinct(String s, String t) {
-        int dp[][] = new int[s.length()][t.length()];
-        for(int a[]:dp){
+        int n = s.length();
+        int m = s.length();
+
+        dp = new int[n][m];
+        for(int a[] : dp){
             Arrays.fill(a,-1);
         }
-
-        return calc(s,t,0,0,dp);
+        return find(s,t,0,0,dp);
     }
-    public int calc(String s,String t,int i,int j,int dp[][]){
-        if(j == t.length()){
+    public int find(String s,String t,int i,int j,int dp[][]){
+        if(j==t.length()){
             return 1;
         }
-        if(i == s.length()){
+        if(i==s.length()){
             return 0;
         }
         if(dp[i][j] != -1){
             return dp[i][j];
         }
+        int ans = find(s,t,i+1,j,dp);
 
-        int inc =0,exc=0;
         if(s.charAt(i) == t.charAt(j)){
-            inc = calc(s,t,i+1,j+1,dp);
+            ans +=find(s,t,i+1,j+1,dp);
         }
-        exc = calc(s,t,i+1,j,dp);
 
-        return dp[i][j] = inc+exc;
+        return dp[i][j] = ans;
     }
 }
