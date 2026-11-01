@@ -21,13 +21,19 @@ class Solution {
         int ans = 0;
 
 
-        for(int i=0;i<n-1;i++){
-            int diff = nums[i+1]-nums[i];
-            ans += diff;
-            for(int j=i+2;j<n;j++){
-                nums[j] += diff;
-            }
+        // for(int i=0;i<n-1;i++){
+        //     int diff = nums[i+1]-nums[i];
+        //     ans += diff;
+        //     for(int j=i+2;j<n;j++){
+        //         nums[j] += diff;
+        //     }
+        // }
+        // return ans;
+
+        for(int i=n-1;i>0;i--){
+            ans += nums[i]-nums[0];
         }
         return ans;
+
     }
 }
